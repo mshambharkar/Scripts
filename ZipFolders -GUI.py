@@ -25,23 +25,24 @@ def ValidateFolder(folderName):
     else:
         return False
 
-def IterateChild(folder):
+def IterateChildZip(folder):
+    for fitem in os.listdir(folder):
+        if os.path.isdir(folder+'\\'+fitem):
+            IterateChildZip(folder+'\\'+fitem)
+        else:
+            ValidateFile(folder+'\\'+fitem)
+def IterateChildFolder(folder):
     for fitem in os.listdir(folder):
         if os.path.isdir(folder+'\\'+fitem):
             if ValidateFolder(fitem):
                 extractedfolders.append(folder+'\\'+fitem)
             else:
-                IterateChild(folder+'\\'+fitem)
-        else:
-            ValidateFile(folder+'\\'+fitem)
+                IterateChildFolder(folder+'\\'+fitem)
 
 
 #loop through each definition
-for item in os.listdir(cur_dir):
-    if os.path.isdir(cur_dir+'\\'+item):
-        IterateChild(cur_dir+'\\'+item)
-    else:
-        ValidateFile(cur_dir+'\\'+item)
+IterateChildZip(cur_dir)
+IterateChildFolder(cur_dir)
 print(compressedlist)
 print(extractedfolders)
 print('Do you want to proceed with delete ? Y/N')
